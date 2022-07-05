@@ -33,5 +33,6 @@ module.exports = {
     'max-len': 'off',
     'func-names': 'off',
     'no-plusplus': 'off',
+    'import/no-unresolved': 'off',
   },
 };

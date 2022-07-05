@@ -1,0 +1,9 @@
+- [ ] Controlar veículos
+- [ ] Favoritar o veículo
+- [ ] Filtrar por qualquer propriedade do veículo
+- [ ] Adicionar opções de filtro
+  - [ ] Marcas
+  - [ ] Cor
+  - [ ] Ano
+  - [ ] Preço min
+  - [ ] Preço max
