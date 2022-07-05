@@ -11,7 +11,7 @@ let cachedDb: Db | null = null;
 export const connect = async (): Promise<MongoReturn> => {
   if (cachedClient === null && cachedDb === null) {
     const clientConnect = await MongoClient.connect(process.env.DATABASE_URL as string);
-    const dbConnect = clientConnect.db('vehicles');
+    const dbConnect = clientConnect.db('core');
     cachedClient = clientConnect;
     cachedDb = dbConnect;
   }

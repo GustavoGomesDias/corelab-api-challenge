@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unresolved */
-import { AddOrEditVehicle } from '@usecases/AddOrEditVehicle';
+import { AddVehicle, EditVehicle } from '@usecases/index';
 import { Vehicle } from '@models/Vehicle';
 
 export interface VehicleControlAdapter {
@@ -7,10 +7,10 @@ export interface VehicleControlAdapter {
   getVehicleByName(name: string): Promise<Vehicle>
   getVehicleByPlate(plate: string): Promise<Vehicle>
   getFavorites(): Promise<Vehicle[]>
-  findInAnyFieldWithSearchInfo(): Promise<Vehicle[]>
-  filterByMultipleFields(): Promise<Vehicle[]>
+  findInAnyFieldWithSearchInfo(info: string): Promise<Vehicle[]>
+  filterByMultipleFields(filters: Record<any, any>): Promise<Vehicle[]>
 
-  create(vehicle: AddOrEditVehicle): Promise<void>
-  edit(vehicle: AddOrEditVehicle): Promise<void>
+  create(vehicle: AddVehicle): Promise<void>
+  edit(vehicle: EditVehicle): Promise<void>
   delete(id: string): Promise<void>
 }
