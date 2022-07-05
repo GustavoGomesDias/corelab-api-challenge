@@ -89,6 +89,11 @@ export class VehicleController {
     path: '/search/',
   })
   @Catch()
+  @NotEmpty({
+    fields: [],
+    errorMessages: [],
+    useQuery: true,
+  })
   async findWithSearchInfo(req: Request, res: Response): Promise<Response> {
     const { query } = req;
 
