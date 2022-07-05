@@ -8,21 +8,32 @@ import { validationField } from '@utils/validations';
 export interface IsFieldValidProps {
   fields: string[]
   errorMessages: string[]
+  param?: string
+  errorParamMessage?: string
 }
 
-const NotEmpty = ({ fields, errorMessages }: IsFieldValidProps) => (target: any, key: string, descriptor: PropertyDescriptor) => {
+const NotEmpty = ({
+  fields, errorMessages, param, errorParamMessage,
+}: IsFieldValidProps) => (target: any, key: string, descriptor: PropertyDescriptor) => {
   const originalMethod = descriptor.value;
 
   descriptor.value = async function (...args: any[]) {
     const { body, params } = args[0] as Request;
-    console.log(params);
-    let messagePosition = 0;
-    for (const field of fields) {
-      if (!validationField(body[field])) {
-        throw new BadRequestError(errorMessages[messagePosition]);
+    if (param) {
+      if (!validationField(params[param])) {
+        throw new BadRequestError(errorParamMessage as string);
       }
+    }
 
-      messagePosition++;
+    if (fields.length > 0) {
+      let messagePosition = 0;
+      for (const field of fields) {
+        if (!validationField(body[field])) {
+          throw new BadRequestError(errorMessages[messagePosition]);
+        }
+
+        messagePosition++;
+      }
     }
     return await originalMethod.apply(this, args);
   };

@@ -1,11 +1,20 @@
 /* eslint-disable no-restricted-syntax */
+import { injectable } from 'inversify';
 import { ObjectId, Db } from 'mongodb';
 import { VehicleControlAdapter } from '@adapters/VehicleControlAdapter';
 import { Vehicle } from '@models/Vehicle';
 import { AddVehicle, EditVehicle } from '@usecases/index';
 import { connect } from '@db/db';
 
+@injectable()
 export default class VehicleRepository implements VehicleControlAdapter {
+  async getAll(): Promise<Vehicle[]> {
+    const { cachedDb } = await connect();
+    const vehicles = await cachedDb?.collection('vehicle').find({}).toArray() as unknown as Vehicle[];
+
+    return vehicles;
+  }
+
   async getVehicleById(id: string): Promise<Vehicle> {
     const { cachedDb } = await connect();
 
@@ -106,3 +115,7 @@ export default class VehicleRepository implements VehicleControlAdapter {
     await cachedDb?.collection('vehicle').deleteOne({ _id: new ObjectId(id.trim()) });
   }
 }
+
+export const Locator = {
+  VehicleRepository: Symbol.for('CarRepository'),
+};

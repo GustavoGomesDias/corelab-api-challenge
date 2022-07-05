@@ -1,6 +1,6 @@
 /* eslint-disable no-return-await */
 /* eslint-disable no-param-reassign */
-import { Router, Request, Response } from 'express';
+import { Request, Response } from 'express';
 
 export interface ApiRouterProps {
   method: 'get' | 'post' | 'put' | 'delete'

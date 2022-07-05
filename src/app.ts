@@ -2,13 +2,12 @@
 /* eslint-disable import/first */
 import 'reflect-metadata';
 import dotenv from 'dotenv';
-import path from 'path';
 import express, { Express } from 'express';
 import cors from 'cors';
 import { router } from '@decorators/api/Controller';
 import './controllers';
 
-dotenv.config({ path: path.resolve(__dirname, '../.env') });
+dotenv.config();
 
 const options: cors.CorsOptions = {
   allowedHeaders: [
@@ -29,9 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors(options));
 
-// app.use('/api/', testAPI);
 app.use(router);
-// console.log(app.use(router)._router);
 
 const port = process.env.PORT || 3000;
 

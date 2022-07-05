@@ -3,6 +3,7 @@ import { AddVehicle, EditVehicle } from '@usecases/index';
 import { Vehicle } from '@models/Vehicle';
 
 export interface VehicleControlAdapter {
+  getAll(): Promise<Vehicle[]>
   getVehicleById(id: string): Promise<Vehicle>
   getVehicleByName(name: string): Promise<Vehicle>
   getVehicleByPlate(plate: string): Promise<Vehicle>
