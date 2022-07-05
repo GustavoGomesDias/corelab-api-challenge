@@ -34,5 +34,6 @@ module.exports = {
     'func-names': 'off',
     'no-plusplus': 'off',
     'import/no-unresolved': 'off',
+    'no-param-reassign': 'off',
   },
 };
