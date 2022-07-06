@@ -1,17 +1,19 @@
 /* eslint-disable no-useless-constructor */
-import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import { VehicleControlAdapter } from '@adapters/VehicleControlAdapter';
 import { Controller } from '@decApi/Controller';
-import { Locator } from '@repo/VehicleRepository';
 import ApiRouter from '@decApi/ApiRouter';
 import Catch from '@decorators/handlers/Catch';
 import NotEmpty from '@validations/NotEmpty';
-import { AddVehicle, EditVehicle } from '@usecases/index';
+import { EditVehicle } from '@usecases/index';
 
 @Controller('/vehicle')
 export class VehicleController {
-  constructor(@inject(Locator.VehicleRepository) private repository: VehicleControlAdapter) {}
+  private repository: VehicleControlAdapter;
+
+  constructor(repository: VehicleControlAdapter) {
+    this.repository = repository;
+  }
 
   @ApiRouter({
     method: 'get',
@@ -121,7 +123,8 @@ export class VehicleController {
   async addVehicle(req: Request, res: Response) {
     const { body } = req;
 
-    await this.repository.create(body as AddVehicle);
+    console.log(this.repository);
+    // await this.repository.create(body as AddVehicle);
     return res.status(201).json({ message: 'Veículo criado com sucesso!' });
   }
 
