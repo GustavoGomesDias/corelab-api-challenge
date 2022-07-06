@@ -7,6 +7,7 @@ import { Locator } from '@repo/VehicleRepository';
 import ApiRouter from '@decApi/ApiRouter';
 import Catch from '@decorators/handlers/Catch';
 import NotEmpty from '@validations/NotEmpty';
+import { AddVehicle, EditVehicle } from '@usecases/index';
 
 @Controller('/vehicle')
 export class VehicleController {
@@ -99,5 +100,58 @@ export class VehicleController {
 
     const vehicles = await this.repository.filterByMultipleFields(query);
     return res.status(200).json({ content: vehicles });
+  }
+
+  @ApiRouter({
+    method: 'post',
+    path: '/',
+  })
+  @Catch()
+  @NotEmpty({
+    fields: ['name', 'plate', 'description', 'year', 'color', 'price'],
+    errorMessages: [
+      'É preciso passar o nome do carro.',
+      'É preciso passar a placa do carro.',
+      'É preciso passar uma descrição sobre o carro.',
+      'É preciso passar o ano do carro.',
+      'É preciso passar a cor do carro.',
+      'É preciso passar o preço do carro.',
+    ],
+  })
+  async addVehicle(req: Request, res: Response) {
+    const { body } = req;
+
+    await this.repository.create(body as AddVehicle);
+    return res.status(201).json({ message: 'Veículo criado com sucesso!' });
+  }
+
+  @ApiRouter({
+    method: 'put',
+    path: '/',
+  })
+  @Catch()
+  async editVehicle(req: Request, res: Response) {
+    const { body } = req;
+
+    await this.repository.edit(body as EditVehicle);
+    return res.status(200).json({ message: 'Veículo atualizado com sucesso!' });
+  }
+
+  @ApiRouter({
+    method: 'delete',
+    path: '/:id',
+  })
+  @Catch()
+  @NotEmpty({
+    fields: [],
+    errorMessages: [],
+    param: 'id',
+    errorParamMessage: 'É preciso passar o id de um veículo para exclui-lo.',
+  })
+  async deleteVehicle(req: Request, res: Response) {
+    const { id } = req.params;
+
+    await this.repository.delete(id);
+    return res.status(200).json({ message: 'Veículo atualizado com sucesso!' });
   }
 }

@@ -64,8 +64,16 @@ export default class VehicleRepository implements VehicleControlAdapter {
     const keys = Object.keys(filters);
     const andArray: Record<any, any>[] = [];
     for (const key of keys) {
+      if (key !== 'priceMin' && key !== 'priceMax') {
+        andArray.push({
+          [key]: filters[key],
+        });
+      }
+    }
+
+    if (keys.indexOf('priceMin') >= 0 || keys.indexOf('priceMax')) {
       andArray.push({
-        [key]: filters[key],
+        $or: [{ price: { $lt: filters.priceMin } }, { price: { $lt: filters.priceMax } }],
       });
     }
 
