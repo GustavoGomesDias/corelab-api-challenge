@@ -21,13 +21,19 @@ export default {
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   collectCoverageFrom: [
-    '**/*.{ts}',
+    '**/*.{js,ts}',
     '!**/.eslintrc.js',
     '!**/adapters/**',
     '!**/models/**',
     '!**/usecases/**',
     '!**/config/**',
     '!**/*.config.*',
+    '!**/dist/**',
+    '!**/coverage/**',
+    '!**/app.ts',
+    '!**/factories/**',
+    '!**/controllers/Api.ts',
+    '!**/index.ts',
   ],
 
   // The directory where Jest should output its coverage files

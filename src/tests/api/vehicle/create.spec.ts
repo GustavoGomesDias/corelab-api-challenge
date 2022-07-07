@@ -23,6 +23,7 @@ describe('Handle create API route', () => {
       });
 
     expect(response.statusCode).toEqual(400);
+    expect(response.body.error).toEqual('É preciso passar o nome do carro.');
   });
 
   test('Should return 400 if plate is undefined', async () => {

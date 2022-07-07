@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest --coverage --detectOpenHandles",
     "test-w": "jest --coverage --watch --no-cache",
     "build": "tsc && tsc-alias",
     "start": "node dist/src/app.js",

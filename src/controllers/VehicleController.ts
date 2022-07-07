@@ -127,8 +127,8 @@ class VehicleController {
     ],
   })
   @IsFieldNumberValid({
-    fields: ['year'],
-    errorMessages: ['O ano do carro tem que ser maior que 1900.'],
+    fields: ['year', 'price'],
+    errorMessages: ['O ano do carro tem que ser maior que 1900.', 'O preço precisa ser maior que 0.'],
   })
   async addVehicle(req: Request, res: Response) {
     const { body } = req;
@@ -144,8 +144,8 @@ class VehicleController {
   })
   @Catch()
   @IsFieldNumberValid({
-    fields: ['year'],
-    errorMessages: ['O ano do carro tem que ser maior que 1900.'],
+    fields: ['year', 'price'],
+    errorMessages: ['O ano do carro tem que ser maior que 1900.', 'O preço precisa ser maior que 0.'],
   })
   async editVehicle(req: Request, res: Response) {
     const { body } = req;
