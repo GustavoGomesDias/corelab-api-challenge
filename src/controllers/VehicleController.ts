@@ -7,6 +7,7 @@ import Catch from '@decorators/handlers/Catch';
 import NotEmpty from '@validations/NotEmpty';
 import { EditVehicle } from '@usecases/index';
 import makeVehicleRepository from '@injection/RepositoryFactory';
+import IsFieldNumberValid from '@validations/IsFieldNumberValid';
 
 @Controller('/vehicle')
 class VehicleController {
@@ -125,6 +126,10 @@ class VehicleController {
       'É preciso passar o preço do carro.',
     ],
   })
+  @IsFieldNumberValid({
+    fields: ['year'],
+    errorMessages: ['O ano do carro tem que ser maior que 1900.'],
+  })
   async addVehicle(req: Request, res: Response) {
     const { body } = req;
 
@@ -138,6 +143,10 @@ class VehicleController {
     path: '/',
   })
   @Catch()
+  @IsFieldNumberValid({
+    fields: ['year'],
+    errorMessages: ['O ano do carro tem que ser maior que 1900.'],
+  })
   async editVehicle(req: Request, res: Response) {
     const { body } = req;
 
