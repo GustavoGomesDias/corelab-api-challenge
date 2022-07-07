@@ -143,6 +143,18 @@ class VehicleController {
     path: '/',
   })
   @Catch()
+  @NotEmpty({
+    fields: ['id', 'name', 'plate', 'description', 'year', 'color', 'price'],
+    errorMessages: [
+      'É preciso passar o id do carro.',
+      'É preciso passar o nome do carro.',
+      'É preciso passar a placa do carro.',
+      'É preciso passar uma descrição sobre o carro.',
+      'É preciso passar o ano do carro.',
+      'É preciso passar a cor do carro.',
+      'É preciso passar o preço do carro.',
+    ],
+  })
   @IsFieldNumberValid({
     fields: ['year', 'price'],
     errorMessages: ['O ano do carro tem que ser maior que 1900.', 'O preço precisa ser maior que 0.'],

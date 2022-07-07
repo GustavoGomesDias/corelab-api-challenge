@@ -11,10 +11,11 @@ export interface IsFieldValidProps {
   param?: string
   useQuery?: boolean
   errorParamMessage?: string
+  isEditAction?: boolean
 }
 
 const NotEmpty = ({
-  fields, errorMessages, param, errorParamMessage, useQuery,
+  fields, errorMessages, param, errorParamMessage, useQuery, isEditAction,
 }: IsFieldValidProps) => (target: any, key: string, descriptor: PropertyDescriptor) => {
   const originalMethod = descriptor.value;
 
@@ -34,14 +35,30 @@ const NotEmpty = ({
       }
     }
 
-    if (fields.length > 0) {
-      let messagePosition = 0;
-      for (const field of fields) {
-        if (!validationField(body[field])) {
-          throw new BadRequestError(errorMessages[messagePosition]);
-        }
+    if (!isEditAction) {
+      if (fields.length > 0) {
+        let messagePosition = 0;
+        for (const field of fields) {
+          if (!validationField(body[field])) {
+            throw new BadRequestError(errorMessages[messagePosition]);
+          }
 
-        messagePosition++;
+          messagePosition++;
+        }
+      }
+    } else {
+      // eslint-disable-next-line no-lonely-if
+      if (fields.length > 0) {
+        let messagePosition = 0;
+        for (const field of fields) {
+          if (body[field]) {
+            if (!validationField(body[field])) {
+              throw new BadRequestError(errorMessages[messagePosition]);
+            }
+
+            messagePosition++;
+          }
+        }
       }
     }
     return await originalMethod.apply(this, args);
