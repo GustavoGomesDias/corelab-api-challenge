@@ -53,10 +53,4 @@ class App {
 
 const { app } = new App();
 
-const port = process.env.PORT || 3000;
-
 export default app;
-
-app.listen(port, () => {
-  console.log(`== 📣 Server running at ${port}! ==`);
-});

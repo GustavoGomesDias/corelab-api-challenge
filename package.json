@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage --detectOpenHandles",
-    "test-w": "jest --coverage --watch --no-cache",
+    "test-w": "jest --watch --no-cache",
     "build": "tsc && tsc-alias",
     "start": "node dist/src/app.js",
     "postinstall": "npm run build",
-    "dev": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register src/app.ts"
+    "dev": "nodemon -e ts,js --exec ts-node -r tsconfig-paths/register server.ts"
   },
   "repository": {
     "type": "git",
