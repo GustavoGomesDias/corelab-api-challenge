@@ -11,6 +11,7 @@ getFavorites(): Promise<Vehicle[]>
 findInAnyFieldWithSearchInfo(info: string): Promise<Vehicle[]>
 filterByMultipleFields(filters: Record<any, any>): Promise<Vehicle[]>
 
+makeAUniques(): Promise<void>
 create(vehicle: AddVehicle): Promise<void>
 edit(vehicle: EditVehicle): Promise<void>
 delete(id: string): Promise<void>

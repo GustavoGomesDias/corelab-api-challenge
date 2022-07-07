@@ -6,6 +6,13 @@ import { AddVehicle, EditVehicle } from '@usecases/index';
 import { connect } from '@db/db';
 
 export default class VehicleRepository implements VehicleControlAdapter {
+  private createUniques = false;
+
+  async makeAUniques(): Promise<void> {
+    const { cachedDb } = await connect();
+    await cachedDb?.collection('vehicle').createIndex({ plate: 1 }, { unique: true });
+  }
+
   async getAll(): Promise<Vehicle[]> {
     const { cachedDb } = await connect();
     const vehicles = await cachedDb?.collection('vehicle').find({}).toArray() as unknown as Vehicle[];
@@ -82,6 +89,10 @@ export default class VehicleRepository implements VehicleControlAdapter {
   }
 
   async create(vehicle: AddVehicle): Promise<void> {
+    if (!this.createUniques) {
+      await this.makeAUniques();
+    }
+    this.createUniques = true;
     const { cachedDb } = await connect();
 
     await cachedDb?.collection('vehicle').insertOne({

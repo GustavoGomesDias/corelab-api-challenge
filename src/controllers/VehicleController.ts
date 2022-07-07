@@ -1,18 +1,23 @@
 /* eslint-disable no-useless-constructor */
 import { Request, Response } from 'express';
 import { VehicleControlAdapter } from '@adapters/VehicleControlAdapter';
-import { Controller } from '@decApi/Controller';
 import ApiRouter from '@decApi/ApiRouter';
+import { Controller } from '@decApi/Controller';
 import Catch from '@decorators/handlers/Catch';
 import NotEmpty from '@validations/NotEmpty';
 import { EditVehicle } from '@usecases/index';
+import makeVehicleRepository from '@injection/RepositoryFactory';
 
 @Controller('/vehicle')
-export class VehicleController {
-  private repository: VehicleControlAdapter;
+class VehicleController {
+  public repository: VehicleControlAdapter;
 
-  constructor(repository: VehicleControlAdapter) {
-    this.repository = repository;
+  constructor() {
+    this.repository = makeVehicleRepository();
+  }
+
+  returnRepository() {
+    console.log(this.repository.getAll);
   }
 
   @ApiRouter({
@@ -123,8 +128,8 @@ export class VehicleController {
   async addVehicle(req: Request, res: Response) {
     const { body } = req;
 
-    console.log(this.repository);
-    // await this.repository.create(body as AddVehicle);
+    // console.log(this.repository);
+    await this.repository.create(body);
     return res.status(201).json({ message: 'Veículo criado com sucesso!' });
   }
 
@@ -155,6 +160,8 @@ export class VehicleController {
     const { id } = req.params;
 
     await this.repository.delete(id);
-    return res.status(200).json({ message: 'Veículo atualizado com sucesso!' });
+    return res.status(200).json({ message: 'Veículo deletado com sucesso!' });
   }
 }
+
+export default VehicleController;

@@ -8,7 +8,7 @@ export interface ApiRouterProps {
 }
 
 export interface ApiRouterDefinition extends ApiRouterProps {
-  controllerMethod(req: Request, res: Response): any
+  controllerMethod: string | symbol
 }
 
 const ApiRouter = ({ method, path }: ApiRouterProps) => (target: any, key: string, descriptor: PropertyDescriptor): void => {
@@ -19,7 +19,7 @@ const ApiRouter = ({ method, path }: ApiRouterProps) => (target: any, key: strin
   routes.push({
     method,
     path,
-    controllerMethod: descriptor.value,
+    controllerMethod: key,
   });
   Reflect.defineMetadata('routes', routes, target.constructor);
 };
