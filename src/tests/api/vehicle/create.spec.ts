@@ -1,8 +1,9 @@
+import VehicleRepository from '@repo/VehicleRepository';
 import request from 'supertest';
 import app from '../../../app';
 
 describe('Handle create API route', () => {
-  const supertest: request.SuperTest<request.Test> = request('http://localhost:3001'); // = request(app);
+  const supertest: request.SuperTest<request.Test> = request(app); // = request(app);
   const createRequest = {
     name: 'Toyota XYZ',
     plate: 'ABC1234',
@@ -62,7 +63,7 @@ describe('Handle create API route', () => {
     expect(response.statusCode).toEqual(400);
   });
 
-  test('Should return 400 if year is undefined', async () => {
+  test('Should return 400 if color is undefined', async () => {
     const { color, ...rest } = createRequest;
     const response = await supertest.post('/vehicle')
       .expect('Content-Type', /json/)
@@ -74,7 +75,7 @@ describe('Handle create API route', () => {
     expect(response.statusCode).toEqual(400);
   });
 
-  test('Should return 400 if year is undefined', async () => {
+  test('Should return 400 if price is undefined', async () => {
     const { price, ...rest } = createRequest;
     const response = await supertest.post('/vehicle')
       .expect('Content-Type', /json/)
@@ -84,5 +85,64 @@ describe('Handle create API route', () => {
       });
 
     expect(response.statusCode).toEqual(400);
+  });
+
+  test('Should return 400 if year is less than 0', async () => {
+    const { year, ...rest } = createRequest;
+    const response = await supertest.post('/vehicle')
+      .expect('Content-Type', /json/)
+      .send({
+        ...rest,
+        year: -1,
+      });
+
+    expect(response.statusCode).toEqual(400);
+  });
+
+  test('Should return 400 if year is not a number', async () => {
+    const { year, ...rest } = createRequest;
+    const response = await supertest.post('/vehicle')
+      .expect('Content-Type', /json/)
+      .send({
+        ...rest,
+        year: '-1',
+      });
+
+    expect(response.statusCode).toEqual(400);
+  });
+
+  test('Should return 400 if price is less than 0', async () => {
+    const { price, ...rest } = createRequest;
+    const response = await supertest.post('/vehicle')
+      .expect('Content-Type', /json/)
+      .send({
+        ...rest,
+        price: -1,
+      });
+
+    expect(response.statusCode).toEqual(400);
+  });
+
+  test('Should return 400 if price is not a number', async () => {
+    const { year, ...rest } = createRequest;
+    const response = await supertest.post('/vehicle')
+      .expect('Content-Type', /json/)
+      .send({
+        ...rest,
+        price: '-1',
+      });
+
+    expect(response.statusCode).toEqual(400);
+  });
+
+  test('Should return 201 if vehicle is created', async () => {
+    jest.spyOn(VehicleRepository.prototype, 'create').mockImplementationOnce(jest.fn());
+    const response = await supertest.post('/vehicle')
+      .expect('Content-Type', /json/)
+      .send({
+        ...createRequest,
+      });
+
+    expect(response.statusCode).toEqual(201);
   });
 });
