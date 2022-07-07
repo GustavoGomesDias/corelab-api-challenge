@@ -10,7 +10,7 @@ export interface IsFieldNumberValidProps {
   errorMessages: string[]
 }
 
-const IsValidYear = ({
+const IsFieldNumberValid = ({
   fields, errorMessages,
 }: IsFieldNumberValidProps) => (target: any, key: string, descriptor: PropertyDescriptor) => {
   const originalMethod = descriptor.value;
@@ -20,7 +20,7 @@ const IsValidYear = ({
 
     let messagePosition = 0;
     for (const field of fields) {
-      if (body[field]) {
+      if (body[field] !== undefined) {
         if (!validateNumber(body[field])) {
           throw new BadRequestError(errorMessages[messagePosition]);
         }
@@ -34,4 +34,4 @@ const IsValidYear = ({
   return descriptor;
 };
 
-export default IsValidYear;
+export default IsFieldNumberValid;
