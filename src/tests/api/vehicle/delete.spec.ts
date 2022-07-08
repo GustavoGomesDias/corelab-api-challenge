@@ -30,4 +30,20 @@ describe('Handle create API route', () => {
 
     expect(response.statusCode).toEqual(400);
   });
+
+  test('Should call delete route with corret id', async () => {
+    const spy = jest.spyOn(VehicleRepository.prototype, 'delete').mockImplementationOnce(jest.fn());
+    await supertest.delete('/vehicle/aaaa')
+      .expect('Content-Type', /json/);
+
+    expect(spy).toHaveBeenCalledWith('aaaa');
+  });
+
+  test('Should return 200 if vehicle is deleted', async () => {
+    jest.spyOn(VehicleRepository.prototype, 'delete').mockImplementationOnce(jest.fn());
+    const response = await supertest.delete('/vehicle/aaaa')
+      .expect('Content-Type', /json/);
+
+    expect(response.statusCode).toEqual(200);
+  });
 });
