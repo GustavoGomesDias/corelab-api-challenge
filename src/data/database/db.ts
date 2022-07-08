@@ -1,3 +1,4 @@
+/* eslint-disable import/no-mutable-exports */
 import { MongoClient, Db } from 'mongodb';
 
 export interface MongoReturn {
@@ -5,8 +6,8 @@ export interface MongoReturn {
   cachedDb: Db | null
 }
 
-let cachedClient: MongoClient | null = null;
-let cachedDb: Db | null = null;
+export let cachedClient: MongoClient | null = null;
+export let cachedDb: Db | null = null;
 
 export const connect = async (): Promise<MongoReturn> => {
   if (cachedClient === null && cachedDb === null) {
