@@ -11,6 +11,18 @@ export function isEmptyObject(obj: object) {
   return true;
 }
 
+export const isValidObject = (obj: Record<any, any>) => {
+  const keys = Object.keys(obj);
+
+  for (const key of keys) {
+    if (!validationField(obj[key])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 export const isObject = (obj: unknown) => typeof obj === 'object' && obj !== null && !Array.isArray(obj);
 
 export const validateNumber = (page: number) => !(Number.isNaN(page) || page < 0);

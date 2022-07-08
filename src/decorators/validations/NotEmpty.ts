@@ -2,7 +2,9 @@
 /* eslint-disable no-restricted-syntax */
 import { Request } from 'express';
 import BadRequestError from '@err/BadRequestError';
-import { isObject, validationField, isEmptyObject } from '@utils/validations';
+import {
+  isObject, validationField, isEmptyObject, isValidObject,
+} from '@utils/validations';
 
 /* eslint-disable no-param-reassign */
 export interface IsFieldValidProps {
@@ -21,12 +23,18 @@ const NotEmpty = ({
 
   descriptor.value = async function (...args: any[]) {
     const { body, params, query } = args[0] as Request;
-    if (!isObject(query)) {
-      throw new BadRequestError('Por algum motivo, não veio os dados para filtragem.');
-    }
+    if (useQuery) {
+      if (!isObject(query)) {
+        throw new BadRequestError('Por algum motivo, não veio os dados para filtragem.');
+      }
 
-    if (!isEmptyObject(query)) {
-      throw new BadRequestError('Por algum motivo, não veio os dados para filtragem.');
+      if (isEmptyObject(query)) {
+        throw new BadRequestError('Por algum motivo, não veio os dados para filtragem.');
+      }
+
+      if (!isValidObject(query)) {
+        throw new BadRequestError('Por algum motivo, existem dados de filtragens nulos.');
+      }
     }
 
     if (param) {
