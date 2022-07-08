@@ -8,7 +8,7 @@ import { connect } from '@db/db';
 export default class VehicleRepository implements VehicleControlAdapter {
   private createUniques = false;
 
-  async makeAUniques(): Promise<void> {
+  async makeUniques(): Promise<void> {
     const { cachedDb } = await connect();
     await cachedDb?.collection('vehicle').createIndex({ plate: 1 }, { unique: true });
   }
@@ -48,49 +48,60 @@ export default class VehicleRepository implements VehicleControlAdapter {
     return vehicle;
   }
 
-  async findInAnyFieldWithSearchInfo(info: string): Promise<Vehicle[]> {
+  makeSearchQueryWithSearchInfo(info: unknown) {
+    return [
+      { name: { $in: [info] } },
+      { plate: { $in: [info] } },
+      { description: { $in: [info] } },
+      { year: { $in: [info] } },
+      { color: { $in: [info] } },
+      { price: { $in: [info] } },
+    ];
+  }
+
+  async findInAnyFieldWithSearchInfo(info: unknown): Promise<Vehicle[]> {
     const { cachedDb } = await connect();
 
+    const searchQuery = this.makeSearchQueryWithSearchInfo(info);
+
     const vehicle: Vehicle[] = (await (cachedDb as Db).collection('vehicle').find({
-      $or: [
-        { name: { $in: [info] } },
-        { plate: { $in: [info] } },
-        { description: { $in: [info] } },
-        { year: { $in: [info] } },
-        { color: { $in: [info] } },
-        { price: { $in: [info] } },
-      ],
+      $or: searchQuery,
     }).toArray()) as unknown as Vehicle[];
     return vehicle;
   }
 
-  async filterByMultipleFields(filters: Record<any, any>): Promise<Vehicle[]> {
-    const { cachedDb } = await connect();
+  makeSearchQueryWithMultipleFields(filters: Record<any, any>): Record<any, any>[] {
     const keys = Object.keys(filters);
-    const andArray: Record<any, any>[] = [];
+    const searchQuery: Record<any, any>[] = [];
     for (const key of keys) {
       if (key !== 'priceMin' && key !== 'priceMax') {
-        andArray.push({
+        searchQuery.push({
           [key]: filters[key],
         });
       }
     }
 
     if (keys.indexOf('priceMin') >= 0 || keys.indexOf('priceMax')) {
-      andArray.push({
-        $or: [{ price: { $lt: filters.priceMin } }, { price: { $lt: filters.priceMax } }],
+      searchQuery.push({
+        $or: [{ price: { $gt: filters.priceMin } }, { price: { $lt: filters.priceMax } }],
       });
     }
 
+    return searchQuery;
+  }
+
+  async filterByMultipleFields(filters: Record<any, any>): Promise<Vehicle[]> {
+    const { cachedDb } = await connect();
+    const searchQuery = this.makeSearchQueryWithMultipleFields(filters);
     const vehicle: Vehicle[] = (await (cachedDb as Db).collection('vehicle').find({
-      $and: andArray,
+      $and: searchQuery,
     }).toArray()) as unknown as Vehicle[];
     return vehicle;
   }
 
   async create(vehicle: AddVehicle): Promise<void> {
     if (!this.createUniques) {
-      await this.makeAUniques();
+      await this.makeUniques();
     }
     this.createUniques = true;
     const { cachedDb } = await connect();

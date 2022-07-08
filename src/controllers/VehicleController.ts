@@ -17,10 +17,6 @@ class VehicleController {
     this.repository = makeVehicleRepository();
   }
 
-  returnRepository() {
-    console.log(this.repository.getAll);
-  }
-
   @ApiRouter({
     method: 'get',
     path: '/',
@@ -95,7 +91,25 @@ class VehicleController {
 
   @ApiRouter({
     method: 'get',
-    path: '/search/',
+    path: '/search/:info',
+  })
+  @Catch()
+  @NotEmpty({
+    fields: [],
+    errorMessages: [],
+    param: 'info',
+    errorParamMessage: 'É preciso ter alguma informação para realizar a busca.',
+  })
+  async findWithSearchInfo(req: Request, res: Response): Promise<Response> {
+    const { info } = req.params;
+
+    const vehicles = await this.repository.findInAnyFieldWithSearchInfo(info);
+    return res.status(200).json({ content: vehicles });
+  }
+
+  @ApiRouter({
+    method: 'get',
+    path: '/filter/',
   })
   @Catch()
   @NotEmpty({
@@ -103,10 +117,11 @@ class VehicleController {
     errorMessages: [],
     useQuery: true,
   })
-  async findWithSearchInfo(req: Request, res: Response): Promise<Response> {
+  async findByFilter(req: Request, res: Response): Promise<Response> {
     const { query } = req;
 
     const vehicles = await this.repository.filterByMultipleFields(query);
+
     return res.status(200).json({ content: vehicles });
   }
 
