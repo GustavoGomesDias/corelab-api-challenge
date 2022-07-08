@@ -4,7 +4,7 @@ import { Server } from 'http';
 import request from 'supertest';
 import app from '../../../app';
 
-describe('Handle delete API route', () => {
+describe('Handle get by name API route', () => {
   let server: Server;
   let supertest: request.SuperAgentTest;
   beforeAll(async () => {
@@ -24,24 +24,24 @@ describe('Handle delete API route', () => {
   jest.spyOn(console, 'log').mockImplementation(jest.fn());
 
   test('Should return 400 if id is undefined', async () => {
-    jest.spyOn(VehicleRepository.prototype, 'delete').mockImplementationOnce(jest.fn());
-    const response = await supertest.delete('/vehicle/""')
+    jest.spyOn(VehicleRepository.prototype, 'getVehicleByName').mockImplementationOnce(jest.fn());
+    const response = await supertest.get('/vehicle/name/""')
       .expect('Content-Type', /json/);
 
     expect(response.statusCode).toEqual(400);
   });
 
   test('Should call delete route with corret id', async () => {
-    const spy = jest.spyOn(VehicleRepository.prototype, 'delete').mockImplementationOnce(jest.fn());
-    await supertest.delete('/vehicle/aaaa')
+    const spy = jest.spyOn(VehicleRepository.prototype, 'getVehicleByName').mockImplementationOnce(jest.fn());
+    await supertest.get('/vehicle/name/aaaa')
       .expect('Content-Type', /json/);
 
     expect(spy).toHaveBeenCalledWith('aaaa');
   });
 
-  test('Should return 200 if vehicle is deleted', async () => {
-    jest.spyOn(VehicleRepository.prototype, 'delete').mockImplementationOnce(jest.fn());
-    const response = await supertest.delete('/vehicle/aaaa')
+  test('Should return 200 if vehicle is finded', async () => {
+    jest.spyOn(VehicleRepository.prototype, 'getVehicleByName').mockImplementationOnce(jest.fn());
+    const response = await supertest.get('/vehicle/name/aaaa')
       .expect('Content-Type', /json/);
 
     expect(response.statusCode).toEqual(200);
