@@ -1,6 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-restricted-syntax */
-export const validationField = (field: unknown) => !(field === '' || field === ' ' || field === null || field === undefined);
+export const validationField = (field: unknown) => !(field === '""' || field === '' || field === ' ' || field === null || field === undefined);
 
 export function isEmptyObject(obj: object) {
   for (const property in obj) {

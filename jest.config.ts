@@ -34,6 +34,7 @@ export default {
     '!**/factories/**',
     '!**/controllers/Api.ts',
     '!**/index.ts',
+    '!**/server.ts',
   ],
 
   // The directory where Jest should output its coverage files
