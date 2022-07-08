@@ -1,9 +1,27 @@
 import VehicleRepository from '@repo/VehicleRepository';
+import { Server } from 'http';
 import request from 'supertest';
+import { connect } from '@db/db';
 import app from '../../../app';
 
-describe('Handle create API route', () => {
-  const supertest: request.SuperTest<request.Test> = request(app); // = request(app);
+describe('Handle edit API route', () => {
+  let server: Server;
+  let supertest: request.SuperAgentTest;
+  beforeAll(async () => {
+    const { cachedDb } = await connect();
+    server = app.listen(4001);
+
+    supertest = request.agent(server);
+  });
+
+  afterAll(async () => {
+    const { cachedClient } = await connect();
+    cachedClient?.close();
+    if (server) {
+      server.close();
+    }
+  });
+
   const updateRequest = {
     id: 'sajdkajsdk',
     name: 'Toyota XYZ',
@@ -13,9 +31,10 @@ describe('Handle create API route', () => {
     color: 'red',
     price: 2099.99,
   };
+
   jest.spyOn(console, 'log').mockImplementation(jest.fn());
 
-  test('Should return 400 if name is undefined', async () => {
+  test('Should return 400 if id is undefined', async () => {
     const { id, ...rest } = updateRequest;
     const response = await supertest.put('/vehicle')
       .expect('Content-Type', /json/)
@@ -25,7 +44,7 @@ describe('Handle create API route', () => {
       });
 
     expect(response.statusCode).toEqual(400);
-    expect(response.body.error).toEqual('É preciso passar o nome do carro.');
+    expect(response.body.error).toEqual('É preciso passar o id do carro.');
   });
 
   test('Should return 400 if name is undefined', async () => {

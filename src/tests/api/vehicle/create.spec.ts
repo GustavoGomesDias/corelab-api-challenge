@@ -1,9 +1,27 @@
+import { connect } from '@db/db';
 import VehicleRepository from '@repo/VehicleRepository';
+import { Server } from 'http';
 import request from 'supertest';
 import app from '../../../app';
 
 describe('Handle create API route', () => {
-  const supertest: request.SuperTest<request.Test> = request(app); // = request(app);
+  let server: Server;
+  let supertest: request.SuperAgentTest;
+  beforeAll(async () => {
+    const { cachedDb } = await connect();
+    server = app.listen(4001);
+
+    supertest = request.agent(server);
+  });
+
+  afterAll(async () => {
+    const { cachedClient } = await connect();
+    cachedClient?.close();
+    if (server) {
+      server.close();
+    }
+  });
+
   const createRequest = {
     name: 'Toyota XYZ',
     plate: 'ABC1234',
