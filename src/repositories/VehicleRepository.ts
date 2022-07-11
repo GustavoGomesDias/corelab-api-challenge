@@ -127,8 +127,7 @@ export default class VehicleRepository implements VehicleControlAdapter {
 
     await cachedDb?.collection('vehicle').updateOne({ _id: new ObjectId(vehicle.id.trim()) }, {
       $set: {
-        ...vehicle.infos,
-
+        ...vehicle,
         updatedAt: new Date(
           new Date().toLocaleString('en-US', {
             timeZone: 'America/Sao_Paulo',

@@ -1,7 +1,7 @@
 import { Vehicle } from '@models/Vehicle';
 
 export type AddVehicle = Omit<Vehicle, '_id' | 'createdAt' | 'isFavorite'>;
-export type EditVehicle = {
+
+export interface EditVehicle extends Omit<Vehicle, '_id'> {
   id: string
-  infos: Partial<AddVehicle>;
 }
