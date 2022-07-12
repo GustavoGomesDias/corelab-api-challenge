@@ -160,6 +160,7 @@ São os imports com @ 😎
 - Cors
 - Reflect API
 - Nodemon
+- ES Lint
 
 ## TDD
 Tem um pouco de testes aqui, mas muito mais focado apenas nas rotas e nos controllers. Eu tentei fazer alguns testes de integração e TDD mais voltados pro repository, mas acabou que eu não consegui e com o tempo apertado, resolvi deixar ele para lá.
